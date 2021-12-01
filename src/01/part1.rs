@@ -12,13 +12,10 @@ fn read_input(filename: &str) -> Result<Vec<i64>, String> {
     let mut output = Vec::new();
     for line_iter in reader.lines() {
         match line_iter {
-            Ok(x) => {
-                match x.parse::<i64>() {
-                    Ok(num) => output.push(num),
-                    Err(err) => return Err(format!("invalid number {:?}, {:?}", x, err)),
-                }
-                output.push(x.parse().unwrap());
-            }
+            Ok(x) => match x.parse::<i64>() {
+                Ok(num) => output.push(num),
+                Err(err) => return Err(format!("invalid number {:?}, {:?}", x, err)),
+            },
             Err(x) => {
                 return Err(format!("cannot read input: {:?}", x));
             }
