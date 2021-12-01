@@ -26,9 +26,12 @@ fn read_input(filename: &str) -> Result<Vec<i64>, String> {
 }
 
 fn count_increments(inputs: &[i64]) -> usize {
-    let windows: Vec<i64> = inputs.windows(3).map(|w| w.iter().sum()).collect();
-    let increments: Vec<&[i64]> = windows.windows(2).filter(|w| w[1] > w[0]).collect();
-    return increments.len();
+    inputs
+        .windows(3)
+        .map(|w| w.iter().sum())
+        .collect::<Vec<i64>>()
+        .windows(2)
+        .fold(0, |acc, w| if w[1] > w[0] { acc + 1 } else { acc })
 }
 
 fn main() {
