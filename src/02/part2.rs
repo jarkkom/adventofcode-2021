@@ -1,7 +1,9 @@
 use std::env;
 use std::fs::File;
+use std::io;
 use std::io::BufRead;
 use std::io::BufReader;
+use std::io::Read;
 use std::path::Path;
 
 #[derive(PartialEq, Debug)]
@@ -26,23 +28,20 @@ fn parse_command(command: &str) -> Option<Command> {
     }
 
     match parts[0] {
-        "forward" => {
-            Some(Command::Forward(parts[1].parse::<i64>().unwrap()))
-        }
-        "down" => {
-            Some(Command::Down(parts[1].parse::<i64>().unwrap()))
-        }
-        "up" => {
-            Some(Command::Up(parts[1].parse::<i64>().unwrap()))
-        }
+        "forward" => Some(Command::Forward(parts[1].parse::<i64>().unwrap())),
+        "down" => Some(Command::Down(parts[1].parse::<i64>().unwrap())),
+        "up" => Some(Command::Up(parts[1].parse::<i64>().unwrap())),
         _ => None,
     }
 }
 
-fn read_input(filename: &str) -> Result<Vec<Command>, String> {
+fn open_input(filename: &str) -> io::Result<File> {
     let path = Path::new(filename);
-    let file = File::open(path);
-    let reader = BufReader::new(file.unwrap());
+    File::open(path)
+}
+
+fn read_input(reader: impl Read) -> Result<Vec<Command>, String> {
+    let reader = BufReader::new(reader);
 
     let mut output = Vec::new();
     for line_iter in reader.lines() {
@@ -90,7 +89,9 @@ fn main() {
         aim: 0,
     };
 
-    match read_input(&filename) {
+    let input_file = open_input(&filename).unwrap();
+
+    match read_input(input_file) {
         Ok(inputs) => {
             submarine.run_commands(inputs);
             println!("answer {:?}", submarine.x * submarine.depth);
@@ -102,6 +103,30 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_read_input() {
+        let input = String::from(
+            "forward 5
+down 5
+forward 8
+up 3
+down 8
+forward 2
+",
+        );
+
+        let expected = vec![
+            Command::Forward(5),
+            Command::Down(5),
+            Command::Forward(8),
+            Command::Up(3),
+            Command::Down(8),
+            Command::Forward(2),
+        ];
+
+        assert_eq!(read_input(input.as_bytes()).unwrap(), expected);
+    }
 
     #[test]
     fn test_parse_rule() {
