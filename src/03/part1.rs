@@ -40,7 +40,7 @@ fn count_bits(inputs: Vec<String>) -> (i64, i64) {
             match b.as_bytes()[i] as char {
                 '1' => ones += 1,
                 '0' => zeros += 1,
-                _ => continue
+                _ => continue,
             }
         }
 
@@ -91,25 +91,15 @@ mod tests {
         );
 
         let expected = vec![
-            "00100",
-            "11110",
-            "10110",
-            "10111",
-            "10101",
-            "01111",
-            "00111",
-            "11100",
-            "10000",
-            "11001",
-            "00010",
-            "01010",
+            "00100", "11110", "10110", "10111", "10101", "01111", "00111", "11100", "10000",
+            "11001", "00010", "01010",
         ];
 
         assert_eq!(read_input(input.as_bytes()).unwrap(), expected);
     }
 
     #[test]
-    fn test_count_() {
+    fn test_count_bits() {
         let input: Vec<String> = vec![
             String::from("00100"),
             String::from("11110"),
