@@ -50,11 +50,10 @@ fn count_bits(inputs: Vec<i64>) -> (i64, i64) {
 
         if ones >= zeros {
             one_most_common |= 1;
-        } 
+        }
         if zeros >= ones {
             zero_most_common |= 1;
         }
-
     }
     (one_most_common, zero_most_common)
 }
@@ -96,7 +95,8 @@ mod tests {
 01010",
         );
 
-        let expected = vec![0b00100, 0b11110, 0b10110, 0b10111, 0b10101, 0b01111, 0b00111, 0b11100, 0b10000,
+        let expected = vec![
+            0b00100, 0b11110, 0b10110, 0b10111, 0b10101, 0b01111, 0b00111, 0b11100, 0b10000,
             0b11001, 0b00010, 0b01010,
         ];
 
@@ -105,8 +105,10 @@ mod tests {
 
     #[test]
     fn test_count_bits() {
-        let input: Vec<i64> = vec![0b00100, 0b11110, 0b10110, 0b10111, 0b10101, 0b01111, 0b00111, 0b11100, 0b10000,
-        0b11001, 0b00010, 0b01010];
+        let input: Vec<i64> = vec![
+            0b00100, 0b11110, 0b10110, 0b10111, 0b10101, 0b01111, 0b00111, 0b11100, 0b10000,
+            0b11001, 0b00010, 0b01010,
+        ];
 
         assert_eq!(count_bits(input), (0b10110, 0b01001));
     }
