@@ -11,13 +11,13 @@ fn open_input(filename: &str) -> io::Result<File> {
     File::open(path)
 }
 
-fn read_input(reader: impl Read) -> Result<Vec<String>, String> {
+fn read_input(reader: impl Read) -> Result<Vec<i64>, String> {
     let reader = BufReader::new(reader);
 
     let mut output = Vec::new();
     for line_iter in reader.lines() {
         match line_iter {
-            Ok(x) => output.push(x),
+            Ok(x) => output.push(i64::from_str_radix(&x, 2).unwrap_or_default()),
             Err(x) => {
                 return Err(format!("cannot read input: {:?}", x));
             }
@@ -27,30 +27,36 @@ fn read_input(reader: impl Read) -> Result<Vec<String>, String> {
     Ok(output)
 }
 
-fn count_bits(inputs: Vec<String>) -> (i64, i64) {
-    let mut most_common = 0;
-    let mut least_common = 0;
-    for i in 0..inputs[0].len() {
-        most_common <<= 1;
-        least_common <<= 1;
+fn count_bits(inputs: Vec<i64>) -> (i64, i64) {
+    let mut one_most_common = 0;
+    let mut zero_most_common = 0;
+
+    let input_length = 64 - inputs.iter().map(|x| x.leading_zeros()).min().unwrap();
+
+    for i in 0..input_length {
+        one_most_common <<= 1;
+        zero_most_common <<= 1;
 
         let mut zeros = 0;
         let mut ones = 0;
+
+        let mask = 1 << (input_length - 1 - i);
         for b in inputs.iter() {
-            match b.as_bytes()[i] as char {
-                '1' => ones += 1,
-                '0' => zeros += 1,
-                _ => continue,
+            match b & mask == mask {
+                true => ones += 1,
+                false => zeros += 1,
             }
         }
 
-        if ones > zeros {
-            most_common |= 1;
-        } else {
-            least_common |= 1;
+        if ones >= zeros {
+            one_most_common |= 1;
+        } 
+        if zeros >= ones {
+            zero_most_common |= 1;
         }
+
     }
-    (most_common, least_common)
+    (one_most_common, zero_most_common)
 }
 
 fn main() {
@@ -90,9 +96,8 @@ mod tests {
 01010",
         );
 
-        let expected = vec![
-            "00100", "11110", "10110", "10111", "10101", "01111", "00111", "11100", "10000",
-            "11001", "00010", "01010",
+        let expected = vec![0b00100, 0b11110, 0b10110, 0b10111, 0b10101, 0b01111, 0b00111, 0b11100, 0b10000,
+            0b11001, 0b00010, 0b01010,
         ];
 
         assert_eq!(read_input(input.as_bytes()).unwrap(), expected);
@@ -100,20 +105,8 @@ mod tests {
 
     #[test]
     fn test_count_bits() {
-        let input: Vec<String> = vec![
-            String::from("00100"),
-            String::from("11110"),
-            String::from("10110"),
-            String::from("10111"),
-            String::from("10101"),
-            String::from("01111"),
-            String::from("00111"),
-            String::from("11100"),
-            String::from("10000"),
-            String::from("11001"),
-            String::from("00010"),
-            String::from("01010"),
-        ];
+        let input: Vec<i64> = vec![0b00100, 0b11110, 0b10110, 0b10111, 0b10101, 0b01111, 0b00111, 0b11100, 0b10000,
+        0b11001, 0b00010, 0b01010];
 
         assert_eq!(count_bits(input), (0b10110, 0b01001));
     }
