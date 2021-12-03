@@ -27,7 +27,7 @@ fn read_input(reader: impl Read) -> Result<Vec<String>, String> {
     Ok(output)
 }
 
-fn count_bits(inputs: &Vec<String>) -> (i64, i64) {
+fn count_bits(inputs: &[String]) -> (i64, i64) {
     let mut one_most_common = 0;
     let mut zero_most_common = 0;
     for i in 0..inputs[0].len() {
@@ -54,37 +54,8 @@ fn count_bits(inputs: &Vec<String>) -> (i64, i64) {
     (one_most_common, zero_most_common)
 }
 
-fn get_oxygen_rating(inputs: &Vec<String>) -> String {
-    let mut workset = inputs.clone();
-
-    let mut bit_idx = 1 << (workset[0].len() - 1);
-    for i in 0..workset[0].len() {
-        let (ones_common, zeros_common) = count_bits(&workset);
-
-        let can_be_one = (ones_common & bit_idx) != 0;
-        let can_be_zero = (zeros_common & bit_idx) != 0;
-
-        workset.retain(|b| {
-            let bb = b.as_bytes();
-            let c = bb[i] as char;
-
-            let keep = (can_be_one && !can_be_zero && c == '1')
-                || (!can_be_one && can_be_zero && c == '0')
-                || (can_be_one && can_be_zero && c == '1');
-            return keep;
-        });
-        bit_idx >>= 1;
-
-        if workset.len() == 1 {
-            break;
-        }
-    }
-
-    workset[0].clone()
-}
-
-fn get_co2_scrubber_rating(inputs: &Vec<String>) -> String {
-    let mut workset = inputs.clone();
+fn get_oxygen_rating(inputs: &[String]) -> String {
+    let mut workset = inputs.to_owned();
 
     let mut bit_idx = 1 << (workset[0].len() - 1);
     for i in 0..workset[0].len() {
@@ -97,10 +68,33 @@ fn get_co2_scrubber_rating(inputs: &Vec<String>) -> String {
             let bb = b.as_bytes();
             let c = bb[i] as char;
 
-            let keep = (one_most_common && !zero_most_common && c == '0')
-                || (!one_most_common && zero_most_common && c == '1')
-                || (one_most_common && zero_most_common && c == '0');
-            return keep;
+            one_most_common && c == '1' || !one_most_common && zero_most_common && c == '0'
+        });
+        bit_idx >>= 1;
+
+        if workset.len() == 1 {
+            break;
+        }
+    }
+
+    workset[0].clone()
+}
+
+fn get_co2_scrubber_rating(inputs: &[String]) -> String {
+    let mut workset = inputs.to_owned();
+
+    let mut bit_idx = 1 << (workset[0].len() - 1);
+    for i in 0..workset[0].len() {
+        let (ones_common, zeros_common) = count_bits(&workset);
+
+        let one_most_common = (ones_common & bit_idx) != 0;
+        let zero_most_common = (zeros_common & bit_idx) != 0;
+
+        workset.retain(|b| {
+            let bb = b.as_bytes();
+            let c = bb[i] as char;
+
+            one_most_common && c == '0' || !one_most_common && zero_most_common && c == '1'
         });
         bit_idx >>= 1;
 
