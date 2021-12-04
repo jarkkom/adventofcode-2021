@@ -229,4 +229,46 @@ mod tests {
         let expected_win = board.check_win(&vec![7, 4, 9, 5, 11, 17, 23, 2, 0, 14, 21, 24]);
         assert_eq!(expected_win, Some(188));
     }
+
+    #[test]
+    fn test_play_bingo() {
+        let board1 = Board {
+            nums: vec![
+                vec![22, 59, 7, 10, 6],
+                vec![33, 36, 96, 55, 23],
+                vec![13, 85, 18, 29, 28],
+                vec![75, 46, 83, 73, 58],
+                vec![34, 40, 87, 56, 98],
+            ],
+        };
+
+        let board2 = Board {
+            nums: vec![
+                vec![3, 15, 0, 2, 22],
+                vec![9, 18, 13, 17, 5],
+                vec![19, 8, 7, 25, 23],
+                vec![20, 11, 10, 24, 4],
+                vec![14, 21, 16, 12, 6],
+            ],
+        };
+
+        let board3 = Board {
+            nums: vec![
+                vec![14, 21, 17, 24, 4],
+                vec![10, 16, 15, 9, 19],
+                vec![18, 8, 23, 26, 20],
+                vec![22, 11, 13, 6, 5],
+                vec![2, 0, 12, 3, 7],
+            ],
+        };
+
+        let numbers = vec![
+            7, 4, 9, 5, 11, 17, 23, 2, 0, 14, 21, 24, 10, 16, 13, 6, 15, 25, 12, 22, 18, 20, 8, 19,
+            3, 26, 1,
+        ];
+
+        let boards = vec![board1, board2, board3];
+
+        assert_eq!(play_bingo(numbers, boards), 1924);
+    }
 }
