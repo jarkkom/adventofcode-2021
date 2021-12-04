@@ -29,7 +29,6 @@ fn read_input(reader: impl Read) -> Result<Vec<String>, String> {
 
 fn parse_numbers(line: String) -> Vec<i64> {
     line.split(',')
-        .filter(|&x| x != "x")
         .map(|n| n.parse().unwrap())
         .collect()
 }
@@ -64,10 +63,10 @@ impl Board {
         }
 
         // check horizontal row
-        for y in 0..match_rows.len() {
+        for row in match_rows.iter() {
             let mut win = true;
-            for x in 0..match_rows[y].len() {
-                if !match_rows[y][x] {
+            for col in row.iter() {
+                if !col {
                     win = false;
                 }
             }
