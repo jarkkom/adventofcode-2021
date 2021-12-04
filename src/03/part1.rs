@@ -63,7 +63,7 @@ fn main() {
 
     let filename = args.get(1).unwrap();
 
-    let input_file = open_input(&filename).unwrap();
+    let input_file = open_input(filename).unwrap();
 
     match read_input(input_file) {
         Ok(inputs) => {

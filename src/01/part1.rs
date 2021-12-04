@@ -34,7 +34,7 @@ fn main() {
 
     let filename = args.get(1).unwrap();
 
-    match read_input(&filename) {
+    match read_input(filename) {
         Ok(inputs) => println!("increment count is {}", count_increments(&inputs)),
         Err(err) => println!("could not parse input {:?}", err),
     }

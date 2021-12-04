@@ -81,7 +81,7 @@ fn main() {
 
     let mut submarine = Submarine { x: 0, depth: 0 };
 
-    let input_file = open_input(&filename).unwrap();
+    let input_file = open_input(filename).unwrap();
 
     match read_input(input_file) {
         Ok(inputs) => {

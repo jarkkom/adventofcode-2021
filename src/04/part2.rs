@@ -40,12 +40,12 @@ struct Board {
 }
 
 impl Board {
-    fn check_win(&self, numbers: &Vec<i64>) -> Option<i64> {
+    fn check_win(&self, numbers: &[i64]) -> Option<i64> {
         let mut match_rows = Vec::new();
         for row in self.nums.iter() {
             let mut match_cols = Vec::new();
             for col in row.iter() {
-                match_cols.push(numbers.contains(&col));
+                match_cols.push(numbers.contains(col));
             }
             match_rows.push(match_cols);
         }
@@ -53,8 +53,8 @@ impl Board {
         // check vertical row
         for x in 0..match_rows[0].len() {
             let mut win = true;
-            for y in 0..match_rows.len() {
-                if !match_rows[y][x] {
+            for row in match_rows.iter() {
+                if !row[x] {
                     win = false;
                 }
             }
@@ -81,9 +81,9 @@ impl Board {
 
     fn sum_unmarked(&self, match_rows: Vec<Vec<bool>>) -> i64 {
         let mut sum = 0;
-        for y in 0..match_rows.len() {
-            for x in 0..match_rows[y].len() {
-                if !match_rows[y][x] {
+        for (y, row) in match_rows.iter().enumerate() {
+            for (x, col) in row.iter().enumerate() {
+                if !col {
                     sum += self.nums[y][x];
                 }
             }
@@ -100,12 +100,12 @@ fn parse_board(mut lines: Vec<String>) -> (Board, Vec<String>) {
             break;
         }
         let l = lines.remove(0);
-        if l == "" || l == "\n" {
+        if l.is_empty() || l == "\n" {
             break;
         }
         res.push(
             l.split(' ')
-                .filter(|&x| x != "")
+                .filter(|&x| !x.is_empty())
                 .map(|n| n.parse::<i64>().unwrap())
                 .collect(),
         );
@@ -143,7 +143,7 @@ fn main() {
 
     let filename = args.get(1).unwrap();
 
-    let input_file = open_input(&filename).unwrap();
+    let input_file = open_input(filename).unwrap();
 
     match read_input(input_file) {
         Ok(mut inputs) => {
@@ -155,7 +155,7 @@ fn main() {
                 let board = parse_board(inputs);
                 boards.push(board.0);
                 inputs = board.1;
-                if inputs.len() == 0 {
+                if inputs.is_empty() {
                     break;
                 }
             }
