@@ -90,7 +90,6 @@ impl Board {
         }
         sum
     }
-
 }
 
 fn parse_board(mut lines: Vec<String>) -> (Board, Vec<String>) {
@@ -98,17 +97,20 @@ fn parse_board(mut lines: Vec<String>) -> (Board, Vec<String>) {
 
     loop {
         if lines.is_empty() {
-            break
+            break;
         }
         let l = lines.remove(0);
         if l == "" || l == "\n" {
             break;
         }
-        res.push(l.split(' ').filter(|&x| x != "").map(|n| n.parse::<i64>().unwrap()).collect());
+        res.push(
+            l.split(' ')
+                .filter(|&x| x != "")
+                .map(|n| n.parse::<i64>().unwrap())
+                .collect(),
+        );
     }
-    (Board {
-        nums: res
-    }, lines)
+    (Board { nums: res }, lines)
 }
 
 fn play_bingo(numbers: Vec<i64>, boards: Vec<Board>) -> i64 {
@@ -121,7 +123,7 @@ fn play_bingo(numbers: Vec<i64>, boards: Vec<Board>) -> i64 {
                 Some(b) => {
                     return b * temp_n.last().unwrap();
                 }
-                _ => continue
+                _ => continue,
             }
         }
     }
@@ -178,14 +180,22 @@ mod tests {
 
     #[test]
     fn test_parse_board() {
-        let input = vec![String::from("22 59  7 10  6"),
-        String::from("33 36 96 55 23"),
-        String::from("13 85 18 29 28"),
-        String::from("75 46 83 73 58"),
-        String::from("34 40 87 56 98"),
-        String::from("")];
+        let input = vec![
+            String::from("22 59  7 10  6"),
+            String::from("33 36 96 55 23"),
+            String::from("13 85 18 29 28"),
+            String::from("75 46 83 73 58"),
+            String::from("34 40 87 56 98"),
+            String::from(""),
+        ];
 
-        let expected = vec![vec![22, 59,  7, 10,  6], vec![33, 36, 96, 55, 23], vec![13, 85, 18, 29,28], vec![75, 46, 83, 73, 58], vec![34, 40, 87, 56, 98]];
+        let expected = vec![
+            vec![22, 59, 7, 10, 6],
+            vec![33, 36, 96, 55, 23],
+            vec![13, 85, 18, 29, 28],
+            vec![75, 46, 83, 73, 58],
+            vec![34, 40, 87, 56, 98],
+        ];
 
         let board = parse_board(input);
         assert_eq!(board.0.nums, expected);
@@ -194,21 +204,21 @@ mod tests {
 
     #[test]
     fn test_board_check_win() {
-        let input = vec![String::from("14 21 17 24  4"),
-        String::from("10 16 15  9 19"),
-        String::from("18  8 23 26 20"),
-        String::from("22 11 13  6  5"),
-        String::from(" 2  0 12  3  7"),
+        let input = vec![
+            String::from("14 21 17 24  4"),
+            String::from("10 16 15  9 19"),
+            String::from("18  8 23 26 20"),
+            String::from("22 11 13  6  5"),
+            String::from(" 2  0 12  3  7"),
         ];
 
         let parsed_board = parse_board(input);
         let board = parsed_board.0;
 
-        let expected_loss = board.check_win(&vec![7,4,9,5,11,17,23,2,0,14,21]);
+        let expected_loss = board.check_win(&vec![7, 4, 9, 5, 11, 17, 23, 2, 0, 14, 21]);
         assert_eq!(expected_loss, None);
 
-        let expected_win = board.check_win(&vec![7,4,9,5,11,17,23,2,0,14,21,24]);
+        let expected_win = board.check_win(&vec![7, 4, 9, 5, 11, 17, 23, 2, 0, 14, 21, 24]);
         assert_eq!(expected_win, Some(188));
     }
-
 }
