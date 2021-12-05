@@ -28,9 +28,7 @@ fn read_input(reader: impl Read) -> Result<Vec<String>, String> {
 }
 
 fn parse_numbers(line: String) -> Vec<i64> {
-    line.split(',')
-        .map(|n| n.parse().unwrap())
-        .collect()
+    line.split(',').map(|n| n.parse().unwrap()).collect()
 }
 
 #[derive(PartialEq, Debug)]
