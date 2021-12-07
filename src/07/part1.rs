@@ -44,7 +44,6 @@ fn find_least_moves(positions: &[i64]) -> i64 {
         if req_fuel < least_fuel {
             least_fuel = req_fuel;
         }
-        println!("pos {:?}, fuel {:?}", ip, req_fuel);
     }
 
     least_fuel

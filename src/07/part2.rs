@@ -33,12 +33,8 @@ fn parse_positions(line: String) -> Vec<i64> {
     nums
 }
 
-fn fib(n: i64) -> i64 {
-    let mut sum = 0;
-    for i in 1..n + 1 {
-        sum += i;
-    }
-    sum
+fn triangular(n: i64) -> i64 {
+    n * (n + 1) / 2
 }
 
 fn find_least_moves(positions: &[i64]) -> i64 {
@@ -50,11 +46,10 @@ fn find_least_moves(positions: &[i64]) -> i64 {
     for ip in *min..max + 1 {
         let req_fuel = positions
             .iter()
-            .fold(0, |acc, p| acc + fib(i64::abs(p - ip)));
+            .fold(0, |acc, p| acc + triangular(i64::abs(p - ip)));
         if req_fuel < least_fuel {
             least_fuel = req_fuel;
         }
-        //println!("pos {:?}, fuel {:?}", ip, req_fuel);
     }
 
     least_fuel
