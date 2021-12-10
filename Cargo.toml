@@ -60,3 +60,7 @@ path = "src/07/part1.rs"
 [[bin]]
 name = "07-02"
 path = "src/07/part2.rs"
+
+[[bin]]
+name = "08-01"
+path = "src/08/part1.rs"
