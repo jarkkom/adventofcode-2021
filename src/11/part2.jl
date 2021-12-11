@@ -17,35 +17,31 @@ function run_step(octos)
 
     flash_count = 0
     flashed_octos = Set()
-    octos_to_check = Set()
+    octos_to_check = Set(CartesianIndices(octos))
 
-    for oi in CartesianIndices(octos)
-        push!(octos_to_check, oi)
+    while !isempty(octos_to_check)
+        o = pop!(octos_to_check)
 
-        while !isempty(octos_to_check)
-            o = pop!(octos_to_check)
+        if o in flashed_octos
+            continue
+        end
 
-            if o in flashed_octos
-                continue
-            end
+        if octos[o] > 9
+            push!(flashed_octos, o)
+            flash_count += 1
 
-            if octos[o] > 9
-                push!(flashed_octos, o)
-                flash_count += 1
+            x, y = Tuple(o)
+            for ix in (x-1):(x + 1)
+                for iy in (y-1):(y+1)
+                    if ix == 0 && iy == 0
+                        continue
+                    end
 
-                x, y = Tuple(o)
-                for ix in (x-1):(x + 1)
-                    for iy in (y-1):(y+1)
-                        if ix == 0 && iy == 0
-                            continue
-                        end
+                    ci = CartesianIndex((ix, iy))
 
-                        ci = CartesianIndex((ix, iy))
-
-                        if checkbounds(Bool, octos, ci)
-                            octos[ci] += 1
-                            push!(octos_to_check, ci)
-                        end
+                    if checkbounds(Bool, octos, ci)
+                        octos[ci] += 1
+                        push!(octos_to_check, ci)
                     end
                 end
             end
