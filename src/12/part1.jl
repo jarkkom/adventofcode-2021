@@ -20,7 +20,7 @@ function read_input(input_path)
     g
 end
 
-function breadth_first(graph, current, visited, paths)
+function depth_first(graph, current, visited, paths)
     push!(visited, current)
 
     if current == "end"
@@ -32,21 +32,23 @@ function breadth_first(graph, current, visited, paths)
         if lowercase(c) == c && c in visited 
             continue
         end
-        breadth_first(graph, c, copy(visited), paths)
+        depth_first(graph, c, copy(visited), paths)
     end
     paths
 end
 
 sample_path = joinpath(@__DIR__, "sample.txt")
 sample2_path = joinpath(@__DIR__, "sample2.txt")
+sample3_path = joinpath(@__DIR__, "sample3.txt")
 input_path = joinpath(@__DIR__, "input.txt")
 
 sample = read_input(sample_path)
 sample2 = read_input(sample2_path)
+sample3 = read_input(sample3_path)
 input = read_input(input_path)
 
-@assert(length(breadth_first(sample, "start", [], [])) == 10)
+@assert(length(depth_first(sample, "start", [], [])) == 10)
+@assert(length(depth_first(sample2, "start", [], [])) == 19)
+@assert(length(depth_first(sample3, "start", [], [])) == 226)
 
-@assert(length(breadth_first(sample2, "start", [], [])) == 19)
-
-println("answer = $(length(breadth_first(input, "start", [], [])))")
+println("answer = $(length(depth_first(input, "start", [], [])))")
