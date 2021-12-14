@@ -8,7 +8,7 @@ function read_input(input_path)
     template_pairs = Dict()
 
     for i in 1:length(template) -1
-        pair = template[i] * template[i + 1]
+        pair = template[i:i+1]
         if haskey(template_pairs, pair)
             template_pairs[pair] += 1
         else
@@ -17,9 +17,8 @@ function read_input(input_path)
     end
 
     freq = Dict()
-    for (_, c) = enumerate(template)
-        cs = "" * c
-        freq[cs] = get(freq, cs, 0) + 1
+    for (_, c) in enumerate(template)
+        freq[string(c)] = get(freq, string(c), 0) + 1
     end
     
     rules = Dict()
@@ -29,7 +28,7 @@ function read_input(input_path)
         end
 
         m = match(r"(\S+) -> (\S+)", l)
-        if m != nothing
+        if m !== nothing
             rules[m[1]] = m[2]
         end
     end
@@ -39,14 +38,14 @@ end
 function process(rules, pairs, freq)
     new_pairs = Dict()
 
-    for (p, count) in pairs
-        p1 = p[1] * rules[p]
-        p2 = rules[p] * p[2]
+    for (pair, count) in pairs
+        new_pair_1 = string(pair[1], rules[pair])
+        new_pair_2 = string(rules[pair], pair[2])
 
-        new_pairs[p1] = get(new_pairs, p1, 0) + count
-        new_pairs[p2] = get(new_pairs, p2, 0) + count
+        new_pairs[new_pair_1] = get(new_pairs, new_pair_1, 0) + count
+        new_pairs[new_pair_2] = get(new_pairs, new_pair_2, 0) + count
 
-        freq[rules[p]] = get(freq, rules[p], 0) + count
+        freq[rules[pair]] = get(freq, rules[pair], 0) + count
     end
     new_pairs, freq
 end

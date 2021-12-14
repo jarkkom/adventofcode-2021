@@ -8,10 +8,6 @@ function read_input(input_path)
     rules = Dict()
 
     for l in rest
-        if isempty(l)
-            continue
-        end
-
         m = match(r"(\S+) -> (\S+)", l)
         if m !== nothing
             rules[m[1]] = m[2]
@@ -23,7 +19,7 @@ end
 function process(rules, s)
     res = ""
     for i in 1:length(s) -1
-        k = s[i] * s[i + 1]
+        k = s[i:i+1]
         if haskey(rules, k)
             res *= s[i]
             res *= rules[k]
